@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %} 
+{% load static %}
+{% block content %}
+
+{%if user.is_authentication %} 
+<a href="{% url 'post_new' %}" class ="top">
+    {% include './icons/pencil-fill.svg' %}
+</a>
+{% endif %}
+{% for post in post %} 
+    <article class="post">
+      <time class="date">
+          {{ post.published_date }}
+      </time>
+      Category: <a href="{% url 'blog:category_detail' post.category.slug %}">{{post.category}}</a>
+  <h2>
+    <img src="{% if post.thumbnail_image %}{{post.thumbnail_image.url}}{% else %}{% static 'img/abc.jpg' %}{% endif %}" alt="thumb_image" width="50" height="50" style="border-radius: 50%"/>
+          <a href="{% url 'blog:post_detail' slug=post.slug %}">{{ post.title|truncatechars:30 }}</a>
+  </h2>
+      <p>{{ post.text|truncatechars:90 }}</p>
+      Tag:{% for tag in post.tag.all %} 
+      <a href="{% url 'blog:tag_detail' tag.slug %}">{{tag.name}}</a>
+      {% endfor %}    
+    </article>
+{% endfor %} 
+{% endblock %}

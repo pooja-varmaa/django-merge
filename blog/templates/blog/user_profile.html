@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %} 
+{% load static %}
+{% block title %} 
+<title>Profile</title>
+{% endblock title %} 
+{% block content %} 
+
+
+ <table class="user-table">
+     <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'img/abc.jpg' %}{% endif %}" alt="" class="user-img">
+    <tr>
+        <th>Username:</th>
+        <td>{{user.username}}</td>
+    </tr>
+    <tr>
+        <th>First Name:</th>
+        <td>{{user.first_name}}</td>
+    </tr>
+
+    <tr>
+        <th>Last Name:</th>
+        <td>{{user.last_name}}</td>
+    </tr>
+    <tr>
+        <th>Email:</th>
+        <td>{{user.email}}</td>
+    </tr>
+    <tr>
+        <th>MobileNumber:</th>
+        <td>{{user.mobileNumber}}</td>
+    </tr>
+    <tr>
+        <th>City:</th>
+        <td>{{user.city}}</td>
+    </tr>
+    <tr>
+        <th>Country:</th>
+        <td>{{user.country}}</td>
+    </tr>
+    <tr>
+        <th>Gender:</th>
+        <td>{{user.gender}}</td>
+    </tr>
+</table> 
+
+<button>
+    <a href = "{% url 'blog:profile_edit' user.email %}">Update Profile</a>
+</button>
+
+ {% endblock content %}

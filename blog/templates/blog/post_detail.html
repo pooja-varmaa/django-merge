@@ -1,0 +1,68 @@
+
+{% extends 'blog/base.html' %} 
+{% load static %}
+{% block content %} 
+    <article class="post">
+        Category: <a href="{% url 'blog:category_detail' post.category.slug %}">{{post.category}}</a>
+        <aside class="actions">
+            {% if user.is_authenticated %}
+            <a class="btn btn-secondary" href="{% url 'blog:post_edit' post.slug %}">
+                {% include './icons/pencil-fill.svg' %}
+            </a>
+            {% endif %}
+        </aside>
+        {% if post.published_date %}
+            <time class="date">
+                {{ post.published_date }}
+            </time>
+        {% endif %}
+            <h2>
+                <img src="{% if post.thumbnail_image %}{{post.thumbnail_image.url}}{% else %}{% static 'img/abc.jpg' %}{% endif %}" alt="thumb_image" width="50" height="50" style="border-radius: 50%"/>
+                {{ post.title }}
+            </h2>
+            <img src="{% if post.feature_image %}{{post.feature_image.url}}{% else %}{% static 'img/abc.jpg' %}{% endif %}" alt="features_image" class="feature"/>
+        <p>{{ post.text|linebreaksbr }}</p>
+    </article>
+    <br>
+    Tag:{% for tag in post.tag.all %} 
+    <a href="{% url 'blog:tag_detail' tag.slug %}">{{tag.name}}</a>
+    {% endfor %} <br> <br>
+<H2>Comments :</H2>
+
+{% for comment in comments %} {% if comment %}
+<p>{{comment.name}}:{{comment.email}}</p>
+{{comment.parent}}
+<p>{{comment.comment|linebreaks}}</p>
+
+{% for reply in comment.replies.all %} 
+<div class="bg-info-ms-5 p-3 border-1 rounded mb-3">
+    <p>{{reply.name}} : {{reply.email}}</p>
+    <p>{{reply.comment}}</p>
+</div>
+
+{% endfor %} 
+<button style="margin-bottom: 30px;" class="hide" r_id="{{comment.id}}">Reply</button> 
+
+    <div id="reply" style="margin-left: 30px;">               
+        <form method="POST" action="" class="response-form hider form-class{{comment.id}}">
+            <label>Reply :</label>
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <input type="hidden" name="reply_id" value="{{ comment.id }}"/>
+            <input type="submit" value="Send" class="submit-button"/>
+        </form>
+    </div>
+{% else %} 
+<h4>There are no comments</h4>
+{% endif %}
+{% endfor %} 
+
+<h4>Leave a Comment</h4>
+<form method="POST" enctype="multitype/form-data" class="post-form">
+    {% csrf_token %}
+    {{ comment_form.as_p}}
+    <div class="text-Center">
+        <button type="submit" class="save btn btn-secondry text-center">Submit</button>
+    </div>    
+</form>  
+{% endblock %}
